@@ -4,6 +4,8 @@ src/**/oddCastTTSImplementation.java
 *.mpga
 *.mp4
 *.png
+*.mkv
+!bach.mp3
 
 
 .gradle

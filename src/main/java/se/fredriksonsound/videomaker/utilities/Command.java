@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 public class Command {
 
     public static String executeCommand(String command, boolean silent) {
+        if(!silent)
+            System.out.println("Executing command: " + command);
         Process p;
         try {
             p = Runtime.getRuntime().exec(command);

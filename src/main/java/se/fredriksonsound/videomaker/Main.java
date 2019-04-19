@@ -11,6 +11,7 @@ import se.fredriksonsound.videomaker.ttsImplementation.oddCastTTSImplementation;
 
 public class Main {
 
+        static FFMPEGMediaEditor editor = new FFMPEGMediaEditor();
     public static void main(String[] args) {
         RedditImageGrabber imageGrabber = new RedditImageGrabber();
         TTSImplementation TTSImpl = new oddCastTTSImplementation();
@@ -28,15 +29,25 @@ public class Main {
         for(int i = 0; i < postChunks.length; i++)
             System.out.println("\n"+postChunks[i]);
 
-        //TTSImpl.saveVoiceFile(postChunks[0], "chunk_1.mpga");
-        imageGrabber.savePostScreenshot(post, "testPost.png");
+        String concatFiles[] = new String[postChunks.length];
+        for(int i = 0; i < postChunks.length; i++) {
+
+            String curFilename = "chunk_"+i+".mpga";
+            //TTSImpl.saveVoiceFile(postChunks[i], curFilename);
+            concatFiles[i] = curFilename;
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        int[] imageDimensions = imageGrabber.savePostScreenshot(post, "testPost.png");
+        editor.concatenateMedia(concatFiles, "concatFin.mp3");
+        editor.mux("testPost.png",imageDimensions[1],"concatFin.mp3", "programux.mp4");
         System.exit(0);
     }
 
     static void videoEditTest() {
-        FFMPEGMediaEditor editor = new FFMPEGMediaEditor();
-        double clipLength = editor.findLength("content2.mpga");
-        editor.encodeVideoFromImage("image.png", clipLength,"output.mp4");
-        editor.mux("output.mp4", "content2.mpga", "muxed.mp4");
+
     }
 }

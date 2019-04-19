@@ -2,7 +2,7 @@ package se.fredriksonsound.videomaker.redditIntegration;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import se.fredriksonsound.videomaker.util.Http;
+import se.fredriksonsound.videomaker.utilities.Http;
 
 import java.io.IOException;
 

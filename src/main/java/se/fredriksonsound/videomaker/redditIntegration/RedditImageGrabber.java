@@ -26,11 +26,11 @@ public class RedditImageGrabber {
         System.setProperty("webdriver.chrome.driver", "chromedriver/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
-        options.addArguments("window-size=1800,4000");
+        options.addArguments("window-size=1300,5000");
         driver = new ChromeDriver(options);
     }
 
-    public void savePostScreenshot(RedditPost post, String FilePath) {
+    public int[] savePostScreenshot(RedditPost post, String FilePath) {
         driver.get(COMMENT_BASE_URL+post.getID());
 
         WebElement postElement = driver.findElement(By.id(post.getName()));
@@ -54,6 +54,7 @@ public class RedditImageGrabber {
 
         ImageIO.write(croppedScreenshot, "png", new File(FilePath));
 
+        return new int[]{croppedScreenshot.getWidth(), croppedScreenshot.getHeight()};
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
