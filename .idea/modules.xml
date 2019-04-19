@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/redditVideoMaker.iml" filepath="$PROJECT_DIR$/redditVideoMaker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redditVideoMaker.iml" filepath="$PROJECT_DIR$/.idea/modules/redditVideoMaker.iml" />
     </modules>
   </component>
 </project>
