@@ -12,6 +12,7 @@ public class Command {
             p = Runtime.getRuntime().exec(command);
             BufferedReader reader = null;
 
+            flushInputStreamReader(p);
             int exitCode = p.waitFor();
             if(exitCode == 0)
             reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -37,5 +38,14 @@ public class Command {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static void flushInputStreamReader (Process process) throws IOException, InterruptedException {
+        BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line=null;
+        StringBuilder s = new StringBuilder();
+        while((line=input.readLine()) != null) {
+            s.append(line);
+        }
     }
 }

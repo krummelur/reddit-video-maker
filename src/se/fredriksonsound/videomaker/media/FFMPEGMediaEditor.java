@@ -2,11 +2,14 @@ package se.fredriksonsound.videomaker.media;
 
 import se.fredriksonsound.videomaker.utilities.Command;
 
+import java.io.File;
+
 public class FFMPEGMediaEditor {
 
 
     public void encodeVideoFromImage(String imageFile, double length, String outputFilename) {
-        String ffmpegCommand = "ffmpeg -r 1/" + length +" -i " + imageFile + " -c:v libx264 -vf fps=25 -pix_fmt yuv420p " + outputFilename;
+        new File(outputFilename).delete();
+        String ffmpegCommand = "ffmpeg -r 1/" + length +" -i " + imageFile + " -c:v libx264 -vf fps=25 -pix_fmt yuv420p " + outputFilename + " -loglevel error";
         Command.executeCommand(ffmpegCommand, false);
     }
 
@@ -20,7 +23,9 @@ public class FFMPEGMediaEditor {
     }
 
     public void mux(String inputVideoFilename, String inputAudioFilename, String outputFilename) {
+        new File(outputFilename).delete();
         String ffmpegCommand = "ffmpeg -i " + inputVideoFilename + " -i " + inputAudioFilename + " -codec copy -shortest " + outputFilename;
+        Command.executeCommand(ffmpegCommand, false);
     }
 
     private double durationToSeconds (String strDuration) {
