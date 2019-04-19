@@ -4,21 +4,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import se.fredriksonsound.videomaker.media.FFMPEGMediaEditor;
 import se.fredriksonsound.videomaker.redditIntegration.RedditAPI;
+import se.fredriksonsound.videomaker.redditIntegration.RedditImageGrabber;
 import se.fredriksonsound.videomaker.redditIntegration.RedditPost;
 import se.fredriksonsound.videomaker.ttsImplementation.TTSImplementation;
 import se.fredriksonsound.videomaker.ttsImplementation.oddCastTTSImplementation;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 public class Main {
 
     public static void main(String[] args) {
-    //TTSImplementation TTSImpl = new oddCastTTSImplementation();
-    //String mp3Content = TTSImpl.getVoiceDataAsString("max är gay");
-    //System.out.println(mp3Content);
+        RedditImageGrabber imageGrabber = new RedditImageGrabber();
+        TTSImplementation TTSImpl = new oddCastTTSImplementation();
         RedditAPI rAPI = new RedditAPI();
         JSONObject JResponse = rAPI.getHotPosts("prorevenge");
         RedditPost post = null;
@@ -32,6 +27,9 @@ public class Main {
         String[] postChunks = post.getChunks();
         for(int i = 0; i < postChunks.length; i++)
             System.out.println("\n"+postChunks[i]);
+
+        //TTSImpl.saveVoiceFile(postChunks[0], "chunk_1.mpga");
+        imageGrabber.savePostScreenshot(post, "testPost.png");
         System.exit(0);
     }
 

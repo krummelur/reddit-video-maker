@@ -23,6 +23,22 @@ public class RedditPost {
         return chunksArr;
     }
 
+    public String getName() {
+        try {
+            return postJson.getString("name");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getID() {
+        try {
+            return postJson.getString("id");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void cleanTextBody() {
         String result = null;
         try {
@@ -34,7 +50,7 @@ public class RedditPost {
         result = result.replaceAll("&amp;", " ");
         result = result.replaceAll( "#x.{1,4};", " ");
         result = result.replaceAll( "  ", " ");
-        postJson.remove("seltext");
+        //postJson.remove("selftext");
         try {
             postJson.put("selftext", result);
         } catch (JSONException e) {

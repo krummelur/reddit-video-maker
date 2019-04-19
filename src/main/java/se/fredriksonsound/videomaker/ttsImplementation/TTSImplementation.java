@@ -1,5 +1,5 @@
 package se.fredriksonsound.videomaker.ttsImplementation;
 
 public interface TTSImplementation {
-    public String getVoiceDataAsString(String words);
+    public void saveVoiceFile(String words, String filename);
 }
