@@ -6,7 +6,7 @@ src/**/oddCastTTSImplementation.java
 *.png
 *.mkv
 !bach.mp3
-
+concat.txt
 
 .gradle
 /build/

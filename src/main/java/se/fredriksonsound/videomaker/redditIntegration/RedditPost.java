@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class RedditPost {
     private final int CHUNKSIZE = 580;
+    private final double averageLengthOfSpokenChar = 0.0616;
     private JSONObject postJson;
     private ArrayList<String> postBodyChunks = new ArrayList<>();
 
@@ -74,6 +75,38 @@ public class RedditPost {
                 postBodyChunks.add(text.substring(0, nextChunkSz).trim());
 
             text = text.substring(nextChunkSz).trim();
+        }
+    }
+
+    public double estimateSpokenLengthSeconds() {
+        try {
+            return averageLengthOfSpokenChar * this.postJson.getString("selftext").length();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Object getParent() {
+        try {
+            return postJson.getString("crosspost_parent").replaceAll(".._","");
+        } catch (JSONException e) {
+         throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isSelf() {
+        try {
+            return postJson.getBoolean("is_self");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isStickied() {
+        try {
+            return postJson.getBoolean("stickied");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
         }
     }
 }

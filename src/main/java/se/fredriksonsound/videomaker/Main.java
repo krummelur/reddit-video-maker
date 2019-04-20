@@ -8,46 +8,55 @@ import se.fredriksonsound.videomaker.redditIntegration.RedditImageGrabber;
 import se.fredriksonsound.videomaker.redditIntegration.RedditPost;
 import se.fredriksonsound.videomaker.ttsImplementation.TTSImplementation;
 import se.fredriksonsound.videomaker.ttsImplementation.oddCastTTSImplementation;
+import se.fredriksonsound.videomaker.utilities.Command;
+
+import java.io.File;
+import java.util.Arrays;
 
 public class Main {
-
-        static FFMPEGMediaEditor editor = new FFMPEGMediaEditor();
-    public static void main(String[] args) {
-        RedditImageGrabber imageGrabber = new RedditImageGrabber();
-        TTSImplementation TTSImpl = new oddCastTTSImplementation();
-        RedditAPI rAPI = new RedditAPI();
-        JSONObject JResponse = rAPI.getHotPosts("prorevenge");
-        RedditPost post = null;
-        try {
-            post = new RedditPost(((JSONObject)JResponse.getJSONObject("data").getJSONArray("children").get(1))
-                    .getJSONObject("data"));
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String[] postChunks = post.getChunks();
-        for(int i = 0; i < postChunks.length; i++)
-            System.out.println("\n"+postChunks[i]);
-
-        String concatFiles[] = new String[postChunks.length];
-        for(int i = 0; i < postChunks.length; i++) {
-
-            String curFilename = "chunk_"+i+".mpga";
-            //TTSImpl.saveVoiceFile(postChunks[i], curFilename);
-            concatFiles[i] = curFilename;
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+    static class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+        @Override
+        public void uncaughtException(Thread t, Throwable e) {
+            if (videomaker != null) {
                 e.printStackTrace();
+                videomaker.destroy();
+                //Give webdriver a chance to exit properly
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    System.exit(-1);
+                });
             }
         }
-        int[] imageDimensions = imageGrabber.savePostScreenshot(post, "testPost.png");
-        editor.concatenateMedia(concatFiles, "concatFin.mp3");
-        editor.mux("testPost.png",imageDimensions[1],"concatFin.mp3", "programux.mp4");
-        System.exit(0);
     }
 
-    static void videoEditTest() {
+    static VideoMaker videomaker = new VideoMaker();
 
+    public static void main(String[] args) {
+        if (args.length == 0 || args == null) {
+            printHelp();
+        } else if (args[0].equals("")) {
+            printHelp();
+        }
+        ExceptionHandler globalExceptionHandler = new ExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(globalExceptionHandler);
+        if (args.length == 1) {
+            videomaker.makeVideo(args[0]);
+        } else if (args.length == 2) {
+            videomaker.makeVideo(args[0], Integer.parseInt(args[1]));
+        } else if (args.length == 3) {
+            videomaker.makeVideo(args[0], Integer.parseInt(args[1]), args[2]);
+        } else if (args.length == 4) {
+            videomaker.makeVideo(args[0], Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]));
+        }
+    }
+
+    static void printHelp() {
+        System.out.println("This app creates a video from a given subreddit, it comes with a sweet royalty free bach soundtrack, but you can\nuse custom ones too!\nFirst argument must be a subreddit i.e. prorevenge\n" +
+                "Optional second argument is desired length of video in seconds i.e. 300, default is 600\nOptional third argument is filename of background music\nOptional fourth argument is the post offset, if there are a lot of pinned posts, these can be skipped.\n\n" +
+                "example usage:\njava -jar redditVideoMaker.jar prorevenge 300 nickelback-photograph.mp3 3");
     }
 }

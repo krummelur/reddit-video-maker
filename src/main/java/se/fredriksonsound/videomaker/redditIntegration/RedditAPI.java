@@ -1,5 +1,6 @@
 package se.fredriksonsound.videomaker.redditIntegration;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import se.fredriksonsound.videomaker.utilities.Http;
@@ -20,6 +21,22 @@ public class RedditAPI {
         }
         try {
             return new JSONObject(responseStr);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public JSONObject getPost(Object comment_id) {
+        String responseStr = null;
+        try {
+            responseStr = httpUtility.sendGET(redditBaseURL+"/comments/"+comment_id);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        try {
+            return new JSONArray(responseStr).getJSONObject(0);
         } catch (JSONException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

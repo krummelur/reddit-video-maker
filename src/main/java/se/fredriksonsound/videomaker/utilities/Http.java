@@ -59,9 +59,9 @@ public class Http {
             }
 
             System.out.println("Content-Type = " + contentType);
-            System.out.println("Content-Disposition = " + disposition);
-            System.out.println("Content-Length = " + contentLength);
-            System.out.println("fileName = " + fileName);
+            //System.out.println("Content-Disposition = " + disposition);
+            //System.out.println("Content-Length = " + contentLength);
+            //System.out.println("fileName = " + fileName);
 
             // opens input stream from the HTTP connection
             InputStream inputStream = httpConn.getInputStream();

@@ -16,8 +16,9 @@ public class Command {
 
             flushInputStreamReader(p);
             int exitCode = p.waitFor();
-            if(exitCode == 0)
-            reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            if(exitCode == 0) {
+                reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            }
             else
             reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
@@ -31,8 +32,8 @@ public class Command {
                 System.out.println(totalOutput);
                 else
                 System.err.println(totalOutput);
-
             }
+            p.destroy();
             return totalOutput;
         } catch (IOException e) {
             e.printStackTrace();

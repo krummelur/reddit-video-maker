@@ -28,7 +28,20 @@ public class RedditImageGrabber {
         options.addArguments("headless");
         options.addArguments("window-size=1300,5000");
         driver = new ChromeDriver(options);
+
+        //Add shutdown handler to clean up webdriver on exception or force quit
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                //destroy();
+            }
+        }));
     }
+
+    public void destroy() {
+        System.out.println("quitting webdriver");
+        driver.quit();
+    }
+
 
     public int[] savePostScreenshot(RedditPost post, String FilePath) {
         driver.get(COMMENT_BASE_URL+post.getID());
