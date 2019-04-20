@@ -12,7 +12,7 @@ public class Command {
         Process p;
         try {
             p = Runtime.getRuntime().exec(command);
-            BufferedReader reader = null;
+            BufferedReader reader;
 
             flushInputStreamReader(p);
             int exitCode = p.waitFor();
@@ -22,7 +22,7 @@ public class Command {
             else
             reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-            String line = "";
+            String line;
             String totalOutput = "";
             while ((line = reader.readLine()) != null) {
                 totalOutput += line;
@@ -36,16 +36,15 @@ public class Command {
             p.destroy();
             return totalOutput;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     private static void flushInputStreamReader (Process process) throws IOException, InterruptedException {
         BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line=null;
+        String line;
         StringBuilder s = new StringBuilder();
         while((line=input.readLine()) != null) {
             s.append(line);

@@ -72,7 +72,7 @@ public class VideoMaker {
 
 
             } catch (JSONException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
             totalLength += post.estimateSpokenLengthSeconds();
