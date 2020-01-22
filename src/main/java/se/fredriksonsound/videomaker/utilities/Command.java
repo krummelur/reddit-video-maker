@@ -42,7 +42,7 @@ public class Command {
         }
     }
 
-    private static void flushInputStreamReader (Process process) throws IOException, InterruptedException {
+    private static void flushInputStreamReader (Process process) throws IOException {
         BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
         StringBuilder s = new StringBuilder();

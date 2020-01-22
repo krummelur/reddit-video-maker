@@ -60,6 +60,7 @@ public class RedditPost {
     }
 
     private void chunkPost() {
+        this.postBodyChunks = new ArrayList<>();
         String text = null;
         try {
             text = postJson.getString("selftext");
@@ -83,6 +84,15 @@ public class RedditPost {
             return averageLengthOfSpokenChar * this.postJson.getString("selftext").length();
         } catch (JSONException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isCrossPost() {
+        try {
+            postJson.getString("crosspost_parent");
+            return true;
+        } catch (JSONException e) {
+            return false;
         }
     }
 

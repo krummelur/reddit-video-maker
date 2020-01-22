@@ -13,11 +13,12 @@ import se.fredriksonsound.videomaker.ttsImplementation.oddCastTTSImplementation;
 
 public class VideoMaker {
     FFMPEGMediaEditor editor = new FFMPEGMediaEditor();
+    private String subreddit;
     RedditImageGrabber imageGrabber = null;
     private int DESIRED_LENGTH = 400;
     private String musicName = "bach.mp3";
     private int postOffset = 0;
-    private int maxPostLength = 720;
+    private final int maxPostLength = 250;
 
     void makeVideo(String subreddit, int desiredLength) {
         this.DESIRED_LENGTH = desiredLength;
@@ -36,6 +37,7 @@ public class VideoMaker {
     }
 
     void makeVideo(String subreddit) {
+        this.subreddit = subreddit;
         printStartMessage(subreddit);
         try {
             Thread.sleep(2);
@@ -64,10 +66,20 @@ public class VideoMaker {
 
                     //If post is a cross post, find original post and create from that.
                     if(post.getChunks().length == 0) {
-                        JSONObject jObj = rAPI.getPost(post.getParent());
-                        post = new RedditPost (((JSONObject) jObj.getJSONObject("data").getJSONArray("children").get(0)).getJSONObject("data"));
+
+                        //Post is crosspost
+                        if(post.isCrossPost()) {
+                            JSONObject jObj = rAPI.getPost(post.getParent());
+                            post = new RedditPost (((JSONObject) jObj.getJSONObject("data").getJSONArray("children").get(0)).getJSONObject("data"));
+                        } else {
+                            //post is just empty
+                            postOffset++;
+                        }
+
                     }
-                    postOffset += (post.isStickied()|| post.estimateSpokenLengthSeconds() > maxPostLength) ? 1 : 0;
+                    else {
+                        postOffset += (post.isStickied()|| post.estimateSpokenLengthSeconds() > maxPostLength) ? 1 : 0;
+                    }
                 } while(post.isStickied()|| post.estimateSpokenLengthSeconds() > maxPostLength);
 
 
@@ -110,8 +122,9 @@ public class VideoMaker {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        editor.addMusicTrack("output_nomusic.mp4", "bach.mp3", "output.mp4");
-        System.out.println("Video is done! output file: output.mp4");
+        String outputFile = "output-"+ subreddit + ".mp4";
+        editor.addMusicTrack("output_nomusic.mp4", "bach.mp3", outputFile);
+        System.out.println("Video is done! output file: " + outputFile);
         imageGrabber.destroy();
         //System.exit(0);
     }
